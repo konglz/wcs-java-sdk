@@ -301,7 +301,7 @@ public class HttpClientUtil {
                 httpPost.addHeader("User-Agent", Config.VERSION_NO);
 //            hc = getHttpClient();
             hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(180*1000).setConnectTimeout(30000).build();//设置请求和传输超时时间
             httpPost.setConfig(requestConfig);
             ht = hc.execute(httpPost);
 

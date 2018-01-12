@@ -31,6 +31,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.CharsetUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import java.io.BufferedReader;
@@ -48,6 +50,8 @@ import java.util.Map;
 
 
 public class HttpClientUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
     public static HttpClientResult httpPost(String url, Map<String, String> params) throws WsClientException {
         return httpPost(url, params, null, null);
@@ -301,7 +305,7 @@ public class HttpClientUtil {
                 httpPost.addHeader("User-Agent", Config.VERSION_NO);
 //            hc = getHttpClient();
             hc = createHttpClient(url);
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(180*1000).setConnectTimeout(30000).build();//设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(300*1000).setConnectTimeout(30000).build();//设置请求和传输超时时间
             httpPost.setConfig(requestConfig);
             ht = hc.execute(httpPost);
 
@@ -314,7 +318,7 @@ public class HttpClientUtil {
                 sb.append(readLine);
             }
             response += sb.toString();
-
+            logger.info("request complete,url={},params={},response={}", url, params, response);
             int status = ht.getStatusLine().getStatusCode();
             if (status == 200) {
                 if (!new JsonValidator().validate(response)) {
